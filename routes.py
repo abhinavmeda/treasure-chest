@@ -14,7 +14,7 @@ base_auth_url = 'https://www.reddit.com/api/v1'
 authorization_endpoint = '/authorize'
 access_token_endpoint = '/access_token'
 
-saved_route = 'https://oauth.reddit.com/user/Equivalent_Turn/saved?limit=100'
+saved_route = 'https://oauth.reddit.com/user/Equivalent_Turn/saved?limit=100&after=t1_g3i8q9u'
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -60,6 +60,16 @@ def get_the_access_token():
                'Authorization': "Bearer " + token_json["access_token"]}
 
     res = requests.get(saved_route, headers=headers).json()
+    headers = {"User-Agent": "treasure chest v1.0.0 by /u/Equivalent_Turn",
+               'Authorization': "Bearer " + token_json["access_token"]}
+    # grab the last value at the name parameter in the json response to go through and retrieve the next 100 posts
+    # from the API!
+
+    # you're pretty much all set for the backend now.
+
+    # just need to figure out sessions to store the username + access_token
+    # work on the frontend UI
+    res = requests.get(saved_route, headers=headers).json()
     return res
 
 
@@ -75,3 +85,5 @@ def url_builder(endpoint, parameters):
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+# created: time that the post was made.
