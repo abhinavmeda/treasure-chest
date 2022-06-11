@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Treasures</title>
+</head>
+<body>
+    <h1>{{ token }}</h1>
+    {% for s in saved %}
+        <p>{{ s['data']['author'] }}</p>
+    {% endfor %}
+</body>
+</html>

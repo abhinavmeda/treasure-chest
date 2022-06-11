@@ -14,16 +14,25 @@ base_auth_url = 'https://www.reddit.com/api/v1'
 authorization_endpoint = '/authorize'
 access_token_endpoint = '/access_token'
 
-saved_route = 'https://oauth.reddit.com/user/Equivalent_Turn/saved?limit=100&after=t1_g3i8q9u'
+with open("sessions.txt") as f:
+    first_line = f.readline()
 
+session = {'user': first_line}
+f.close()
+saved_route = 'https://oauth.reddit.com/user/Equivalent_Turn/saved?limit=100'
+
+
+# saved_route = 'https://oauth.reddit.com/user/Equivalent_Turn/saved?limit=100&after=t1_g3i8q9u'
 
 @app.route("/", methods=["GET", "POST"])
 def root():
-    if request.method == 'POST':
+    if request.method == 'POST' and session['user'] == '':
         if request.form['submit_button'] == 'login':
             return redirect("/login")
-    elif request.method == 'GET':
+    elif request.method == 'GET' and session['user'] == '':
         return render_template("root.html")
+    else:
+        return redirect("/redditor")
 
 
 @app.route("/login")
@@ -38,30 +47,39 @@ def first_redirect():
         'scope': 'identity, history',
         'user-agent': 'testing v0.1 by /u/Equivalent_Turn'
     }
-    return redirect(url_builder(authorization_endpoint, params))
+
+    if session['user'] == '':
+        return redirect(url_builder(authorization_endpoint, params))
+    else:
+        return redirect("/redditor")
 
 
 @app.route("/redditor")
 def get_the_access_token():
-    code = request.args.get('code')
-    client_auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
-    post_data = {
-        'grant_type': 'authorization_code',
-        'code': code,
-        'redirect_uri': 'http://localhost:5000/redditor',
-    }
-    post_headers = {
-        'user-agent': 'testing v0.1 by /u/Equivalent_Turn'
-    }
-    response = requests.post(base_auth_url + access_token_endpoint, auth=client_auth, data=post_data,
-                             headers=post_headers)
-    token_json = response.json()
-    headers = {"User-Agent": "treasure chest v1.0.0 by /u/Equivalent_Turn",
-               'Authorization': "Bearer " + token_json["access_token"]}
+    if session['user'] == '':
+        code = request.args.get('code')
+        client_auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
+        post_data = {
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': 'http://localhost:5000/redditor',
+        }
+        post_headers = {
+            'user-agent': 'testing v0.1 by /u/Equivalent_Turn'
+        }
+        response = requests.post(base_auth_url + access_token_endpoint, auth=client_auth, data=post_data,
+                                 headers=post_headers)
+        token_json = response.json()
+        session["user"] = token_json["access_token"]
+        file = open('sessions.txt', 'w')
+        file.write(token_json["access_token"])
+        file.close()
 
-    res = requests.get(saved_route, headers=headers).json()
     headers = {"User-Agent": "treasure chest v1.0.0 by /u/Equivalent_Turn",
-               'Authorization': "Bearer " + token_json["access_token"]}
+               'Authorization': "Bearer " + session["user"]}
+
+    saved_children = requests.get(saved_route, headers=headers).json()['data']['children']
+    return render_template("treasure.html", saved=saved_children, token=session)
     # grab the last value at the name parameter in the json response to go through and retrieve the next 100 posts
     # from the API!
 
@@ -69,8 +87,17 @@ def get_the_access_token():
 
     # just need to figure out sessions to store the username + access_token
     # work on the frontend UI
-    res = requests.get(saved_route, headers=headers).json()
-    return res
+    # return render_template('treasure.html')
+
+
+@app.route("/logout")
+def logout():
+    if session['user'] != '':
+        session['user'] = ''
+    file = open('sessions.txt', 'w')
+    file.write('\n')
+    file.close()
+    return 'done!'
 
 
 def state_generator(size=25, chars=string.ascii_uppercase + string.digits):
