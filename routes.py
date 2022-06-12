@@ -1,3 +1,5 @@
+from typing import List
+import os
 import requests
 import requests.auth
 from flask import Flask, redirect, request, render_template
@@ -21,8 +23,6 @@ session = {'user': first_line}
 f.close()
 saved_route = 'https://oauth.reddit.com/user/Equivalent_Turn/saved?limit=100'
 
-
-# saved_route = 'https://oauth.reddit.com/user/Equivalent_Turn/saved?limit=100&after=t1_g3i8q9u'
 
 @app.route("/", methods=["GET", "POST"])
 def root():
@@ -77,17 +77,23 @@ def get_the_access_token():
 
     headers = {"User-Agent": "treasure chest v1.0.0 by /u/Equivalent_Turn",
                'Authorization': "Bearer " + session["user"]}
+    if os.stat('data.txt').st_size == 0:
+        json_response = requests.get(saved_route, headers=headers).json()
+        ls = parse_json_to_usable_dictionary(json_response)
+        after_parameter = json_response['data']['after']
+        while after_parameter is not None:
+            after_route = saved_route + '&after={}'.format(after_parameter)
+            new_response = requests.get(after_route, headers=headers).json()
+            after_parameter = new_response['data']['after']
+            ls += parse_json_to_usable_dictionary(new_response)
+        with open("data.txt", "w") as file:
+            for data in ls:
+                file.write(str(data))
+                file.write("\n")
 
-    saved_children = requests.get(saved_route, headers=headers).json()['data']['children']
-    return render_template("treasure.html", saved=saved_children, token=session)
-    # grab the last value at the name parameter in the json response to go through and retrieve the next 100 posts
-    # from the API!
-
-    # you're pretty much all set for the backend now.
-
-    # just need to figure out sessions to store the username + access_token
-    # work on the frontend UI
-    # return render_template('treasure.html')
+    with open("data.txt", "r") as file:
+        lines = file.readlines()
+    return render_template("treasure.html", data=lines)
 
 
 @app.route("/logout")
@@ -108,6 +114,36 @@ def url_builder(endpoint, parameters):
     params = '&'.join(['%s=%s' % (k, v) for k, v in parameters.items()])
     url = '%s%s?%s' % (base_auth_url, endpoint, params)
     return url
+
+
+def parse_json_to_usable_dictionary(json_response) -> List:
+    ls = []
+    for things in json_response['data']['children']:
+        kind = things["kind"]
+        if kind == "t1":
+            data = things["data"]
+            ls.append({"kind": things["kind"],
+                       "subreddit": data["subreddit"],
+                       "author": data["author"],
+                       "body": data["body"],
+                       "link": data["link_url"]})
+        elif kind == "t3":
+            data = things["data"]
+            keys = data.keys()
+            if 'url_overridden_by_dest' in keys:
+                ls.append({"kind": things["kind"],
+                           "subreddit": data["subreddit"],
+                           "author": data["author"],
+                           "picture": data["url_overridden_by_dest"],
+                           "link": data["url"]})
+            else:
+                ls.append({"kind": things["kind"],
+                           "subreddit": data["subreddit"],
+                           "author": data["author"],
+                           "body": data["selftext"],
+                           "link": data["url"]})
+
+    return ls
 
 
 if __name__ == "__main__":
