@@ -90,9 +90,12 @@ def get_the_access_token():
             for data in ls:
                 file.write(str(data))
                 file.write("\n")
-
+    lines = []
     with open("data.txt", "r") as file:
-        lines = file.readlines()
+        for data in file:
+            if data != "\n":
+                d = eval(data)
+                lines.append(d)
     return render_template("treasure.html", data=lines)
 
 
