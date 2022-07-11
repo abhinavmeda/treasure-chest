@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<form method="post" action="">
+    <fieldset>
+        <legend>Login</legend>
+        <div>
+            {{ form.username.label }}
+            {{ form.username }}
+        </div>
+        <div>
+            {{ form.password.label}}
+            {{ form.password }}
+        </div>
+        <div>
+            {{ form.submit(class="btn btn-outline-info") }}
+            <small  class="text-muted">
+                {{ form.remember.label}}
+                {{ form.remember }}
+            </small>
+        </div>
+    </fieldset>
+</form>
+
+
+<a href="{{ url_for('homepage') }}">
+    <button class="btn btn-outline-dark">Home</button>
+</a>
+
+{% endblock %}

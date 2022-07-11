@@ -2,3 +2,5 @@
 .env
 sessions.txt
 data.txt
+__pycache__/
+.DS_Store
