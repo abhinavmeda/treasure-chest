@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Login{% endblock %}
-
+{% block style %}static/css/login.css{% endblock %}
 {% block content %}
+<div>
 <form method="post" action="">
     <fieldset>
         <legend>Login</legend>
         <div>
-            {{ form.username.label }}
+            <div>{{ form.username.label }}</div>
             {{ form.username }}
         </div>
         <div>
-            {{ form.password.label}}
+           <div>{{ form.password.label }}</div>
             {{ form.password }}
         </div>
         <div>
@@ -22,10 +23,8 @@
         </div>
     </fieldset>
 </form>
-
-
 <a href="{{ url_for('homepage') }}">
     <button class="btn btn-outline-dark">Home</button>
 </a>
-
+</div>
 {% endblock %}

@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock %}
+{% block style %}static/css/register.css{% endblock %}
 
 {% block content %}
 <div>
         <form method="post" action="">
+            {{ form.hidden_tag() }}
             <fieldset>
                 <legend>Register Today</legend>
                 <div>

@@ -1,16 +1,17 @@
 {% extends "base.html" %}
-
 {% block title %}Home{% endblock %}
 
+{% block style %}static/css/home.css{% endblock %}
+
 {% block content %}
-<h1>Hi, there!</h1>
-<p>
-    Welcome to Treasure Chest, a place for you to keep track of all the treasures you've discovered
+    <div class="info">
+    <h4>
+    <strong>Treasure-Chest</strong> lets you see all  the treasures you've discovered
     on Reddit.
-</p>
-<form method="post">
+    </h4>
+    <form method="post">
     <fieldset>
-        <legend>Click login or register an account to get started</legend>
+        <legend>Login or register for an account to get started</legend>
         <div>
             {{ form.login(class="btn btn-outline-info") }}
             {{ form.register(class="btn btn-outline-warning") }}
@@ -18,4 +19,6 @@
         </div>
     </fieldset>
 </form>
+</div>
+
 {% endblock %}
