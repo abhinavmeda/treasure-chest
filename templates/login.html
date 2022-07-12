@@ -2,29 +2,32 @@
 {% block title %}Login{% endblock %}
 {% block style %}static/css/login.css{% endblock %}
 {% block content %}
-<div>
+
+<div class="container">
+    <h1>
+    Login
+    </h1>
+ <div id="form">
 <form method="post" action="">
-    <fieldset>
-        <legend>Login</legend>
+    {{ form.hidden_tag() }}
         <div>
-            <div>{{ form.username.label }}</div>
-            {{ form.username }}
+            {{ form.email_or_username }}
         </div>
         <div>
-           <div>{{ form.password.label }}</div>
             {{ form.password }}
         </div>
-        <div>
+        <div id="button">
             {{ form.submit(class="btn btn-outline-info") }}
             <small  class="text-muted">
                 {{ form.remember.label}}
                 {{ form.remember }}
             </small>
         </div>
-    </fieldset>
 </form>
+</div>
+</div>
 <a href="{{ url_for('homepage') }}">
     <button class="btn btn-outline-dark">Home</button>
 </a>
-</div>
+
 {% endblock %}
