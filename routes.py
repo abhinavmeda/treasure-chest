@@ -20,6 +20,12 @@ def homepage():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        s = ""
+        for k in request.form:
+            s += "{} = {} ".format(k, request.form[k])
+        return s
+    print(form.errors)
     return render_template('login.html', form=form)
 
 
@@ -28,26 +34,15 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         flash("Account created for {}".format(form.username.data), 'success')
+        # s = ""
+        # for k in request.form:
+        #     s += "{} = {} ".format(k, request.form[k])
+        # return s
         return redirect(url_for('homepage'))
     else:
         pass
         # TODO flash("Account created for {}".format(form.username.data), 'danger')
     return render_template('register.html', form=form)
-    # if request.method == 'GET':
-    #     return render_template('register.html', form=form)
-    # else:
-    #     if form.validate_on_submit():
-    #         s = ""
-    #         for k in request.form:
-    #             s += "{} = {} ".format(k, request.form[k])
-    #         return s
-    #     return "no"
-    # if request.method == "GET":
-    #     return render_template("register.html")
-    # else:
-    #     # TODO check if form fields for username and email exist in database.
-    #     return "Account Created {}, {}".format(request.form.get("username_field"), request.form.get("email_field"))
-
 
 if __name__ == "__main__":
     app.run(debug=True)
