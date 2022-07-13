@@ -28,10 +28,17 @@ class RegistrationForm(FlaskForm):
                                      render_kw={'placeholder': 'confirm password'})
     submit = SubmitField(label='register')
 
+    def validate_username(self, field):
+        # TODO Check database if username already exists and raise error if it does
+        # if field.data in DB:
+        # RAISE VALIDATION_ERROR
+        pass
 
-def validate_email_or_username(form, field):
-    # TODO Check if passed in field is a username or email in the database
-    return True
+    def validate_email(self, field):
+        # TODO Check database if email already exists and raise error if it does
+        # if field.data in DB:
+        # RAISE VALIDATION_ERROR
+        pass
 
 
 class LoginForm(FlaskForm):
@@ -39,9 +46,8 @@ class LoginForm(FlaskForm):
 
     """
     email_or_username = StringField(label='email_or_username', validators=[DataRequired(),
-                                                                           Length(min=3, max=20),
-                                                                           validate_email_or_username],
-                                    render_kw={'placeholder': 'Email address or username'})
+                                                                           Length(min=3, max=20)],
+                                    render_kw={'placeholder': 'Email or username'})
 
     password = PasswordField(label='password', validators=[DataRequired(),
                                                            Length(min=6, max=12)],
@@ -49,5 +55,12 @@ class LoginForm(FlaskForm):
     remember = BooleanField(label='remember me')
 
     submit = SubmitField(label='login')
+
+    def validate_email_or_username(self, field):
+        # TODO Check if field.data is email by using regex
+        # TODO Check if field.data is email
+        # if field.data in DB:
+        # RAISE VALIDATION_ERROR
+        pass
 
 
