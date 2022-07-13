@@ -10,14 +10,14 @@
  <div id="form">
 <form method="post" action="">
     {{ form.hidden_tag() }}
-        <div>
-            {{ form.email_or_username }}
+        <div id="login">
+            {{ form.email_or_username(class="form-control") }}
         </div>
         <div>
-            {{ form.password }}
+            {{ form.password(class="form-control") }}
         </div>
         <div id="button">
-            {{ form.submit(class="btn btn-outline-info") }}
+            {{ form.submit(class="btn btn-danger orange") }}
             <small  class="text-muted">
                 {{ form.remember.label}}
                 {{ form.remember }}
@@ -26,8 +26,5 @@
 </form>
 </div>
 </div>
-<a href="{{ url_for('homepage') }}">
-    <button class="btn btn-outline-dark">Home</button>
-</a>
 
 {% endblock %}

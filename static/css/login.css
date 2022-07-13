@@ -3,27 +3,13 @@
     column-gap: 90px;
     align-items: center;
     justify-content: center;
-    margin-top: 75px
-    /* position: absolute;
-    top:0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto; */
+    margin-top: 75px;
+
 }
 #form{
     background-color:white;
     padding: 30px;
     border-radius: 5px;
 }
-#email_or_username{
-    margin-bottom: 10px;
-    border-radius: 5px;
-    padding: 5px;
-}
-#password{
-    border-radius: 5px;
-    padding: 5px;
 
-}
 

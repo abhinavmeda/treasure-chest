@@ -1,4 +1,13 @@
-body{
+.container{
+    display: flex;
+    column-gap: 90px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 75px;
 
-    margin-left:25px;
+}
+#form{
+    background-color:white;
+    padding: 30px;
+    border-radius: 5px;
 }
