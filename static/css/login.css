@@ -11,5 +11,12 @@
     padding: 30px;
     border-radius: 5px;
 }
+#email_or_username{
+    margin-bottom: 3px;
+}
+#password{
+    margin-bottom: 3px;
+}
+
 
 
