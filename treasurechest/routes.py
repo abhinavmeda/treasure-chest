@@ -1,9 +1,6 @@
-from flask import Flask, redirect, request, render_template, flash, url_for
-from forms import RegistrationForm, LoginForm, RedirectToLoginOrRegister
-from decouple import config
-
-app = Flask(__name__)
-app.config['SECRET_KEY'] = config('SECRET_KEY')
+from flask import redirect, request, render_template, flash, url_for
+from treasurechest.forms import RegistrationForm, LoginForm, RedirectToLoginOrRegister
+from treasurechest import app
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -40,7 +37,3 @@ def register():
         pass
         # TODO flash("Account created for {}".format(form.username.data), 'danger')
     return render_template('register.html', form=form)
-
-
-if __name__ == "__main__":
-    app.run(debug=True)

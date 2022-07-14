@@ -1,5 +1,5 @@
 /.idea
-.env
+treasurechest/.env
 sessions.txt
 data.txt
 __pycache__/
