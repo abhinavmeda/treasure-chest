@@ -1,6 +1,6 @@
 /.idea
-treasurechest/.env
 sessions.txt
+.env
 data.txt
 __pycache__/
 .DS_Store
