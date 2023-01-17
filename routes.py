@@ -9,8 +9,8 @@ from decouple import config
 
 app = Flask(__name__)
 
-client_id = "rWAxoZrP-vTTpNHj3jx5-w"
-client_secret = "Aa-F15d3zPBFDrqMY8VvNXkHcfBpgQ"
+client_id = ""
+client_secret = ""
 
 base_auth_url = 'https://www.reddit.com/api/v1'
 authorization_endpoint = '/authorize'
